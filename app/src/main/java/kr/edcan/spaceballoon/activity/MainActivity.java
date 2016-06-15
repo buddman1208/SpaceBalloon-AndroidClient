@@ -1,7 +1,9 @@
-package kr.edcan.spaceballoon;
+package kr.edcan.spaceballoon.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import kr.edcan.spaceballoon.R;
 
 public class MainActivity extends AppCompatActivity {
 
