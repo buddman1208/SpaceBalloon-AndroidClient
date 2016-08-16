@@ -17,7 +17,7 @@ public class SpaceBalloonHelper {
     public static SpaceBalloonService getServiceInstance(){
         if(retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://malang.moe:9000/")
+                    .baseUrl("http://kafuuchino.one:3000/")
                     .build();
         }
         return retrofit.create(SpaceBalloonService.class);
