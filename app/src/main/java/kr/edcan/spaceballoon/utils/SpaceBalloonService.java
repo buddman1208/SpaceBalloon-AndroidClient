@@ -1,6 +1,6 @@
 package kr.edcan.spaceballoon.utils;
 
-import kr.edcan.spaceballoon.model.ExampleData;
+import kr.edcan.spaceballoon.model.SpaceData;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -15,6 +15,6 @@ public interface SpaceBalloonService {
     * Example API*/
     @FormUrlEncoded
     @POST("/")
-    Call<ExampleData> call(@Field("Example") String example);
+    Call<SpaceData> call(@Field("Example") String example);
 
 }
