@@ -6,38 +6,38 @@ import io.realm.RealmObject;
  * Created by KOHA_CLOUD on 16. 6. 15..
  */
 public class SpaceData extends RealmObject{
-    private String temp, humid, isChimsu;
+    private int temp, humid, isChimsu;
 
     public SpaceData() {
     }
 
-    public SpaceData(String temp, String humid, String isChimsu) {
+    public SpaceData(int temp, int humid, int isChimsu) {
         this.temp = temp;
         this.humid = humid;
         this.isChimsu = isChimsu;
     }
 
-    public String getTemp() {
+    public int getTemp() {
         return temp;
     }
 
-    public String getHumid() {
+    public int getHumid() {
         return humid;
     }
 
-    public String getIsChimsu() {
+    public int getIsChimsu() {
         return isChimsu;
     }
 
-    public void setTemp(String temp) {
+    public void setTemp(int temp) {
         this.temp = temp;
     }
 
-    public void setHumid(String humid) {
+    public void setHumid(int humid) {
         this.humid = humid;
     }
 
-    public void setIsChimsu(String isChimsu) {
+    public void setIsChimsu(int isChimsu) {
         this.isChimsu = isChimsu;
     }
 }
