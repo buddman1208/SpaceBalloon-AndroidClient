@@ -25,4 +25,16 @@ public class SpaceData extends RealmObject{
     public String getIsChimsu() {
         return isChimsu;
     }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
+    }
+
+    public void setHumid(String humid) {
+        this.humid = humid;
+    }
+
+    public void setIsChimsu(String isChimsu) {
+        this.isChimsu = isChimsu;
+    }
 }

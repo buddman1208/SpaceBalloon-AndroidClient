@@ -13,18 +13,21 @@ import android.widget.Toast;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
+import io.realm.Realm;
 import kr.edcan.spaceballoon.R;
+import kr.edcan.spaceballoon.model.SpaceData;
 import kr.edcan.spaceballoon.utils.SpaceBalloonHelper;
 import kr.edcan.spaceballoon.utils.SpaceBalloonService;
 
 public class MainActivity extends AppCompatActivity {
 
     BluetoothSPP bt;
-    String receive;
+    Realm realm;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        realm = Realm.getDefaultInstance();
         bt = new BluetoothSPP(this);
         if (!bt.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext()
@@ -55,11 +58,13 @@ public class MainActivity extends AppCompatActivity {
         });
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                receive = message;
-                String[] s = receive.split(",");
-                for (String i : s) {
-                    Log.e("asdf", i);
-                }
+                realm.beginTransaction();
+                String asdf[] = message.split(",");
+                SpaceData spaceData = realm.createObject(SpaceData.class);
+                spaceData.setHumid(asdf[0]);
+                spaceData.setTemp(asdf[1]);
+                spaceData.setIsChimsu(asdf[2]);
+                realm.commitTransaction();
             }
         });
 
