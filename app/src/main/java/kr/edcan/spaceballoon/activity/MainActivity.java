@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 spaceData.setHumid(asdf[0]);
                 spaceData.setTemp(asdf[1]);
                 spaceData.setIsChimsu(asdf[2]);
+                Log.e("asdf", spaceData.getTemp());
                 realm.commitTransaction();
             }
         });

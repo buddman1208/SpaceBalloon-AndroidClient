@@ -8,6 +8,9 @@ import io.realm.RealmObject;
 public class SpaceData extends RealmObject{
     private String temp, humid, isChimsu;
 
+    public SpaceData() {
+    }
+
     public SpaceData(String temp, String humid, String isChimsu) {
         this.temp = temp;
         this.humid = humid;

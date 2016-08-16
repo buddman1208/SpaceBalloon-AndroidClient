@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="app.akexorcist.bluetoothspp.DeviceList" />
+        <activity android:name=".activity.SelectActivity"></activity>
     </application>
 
 </manifest>
