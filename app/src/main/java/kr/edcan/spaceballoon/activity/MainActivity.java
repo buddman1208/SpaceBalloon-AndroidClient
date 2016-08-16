@@ -1,10 +1,13 @@
 package kr.edcan.spaceballoon.activity;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
@@ -16,68 +19,85 @@ import kr.edcan.spaceballoon.utils.SpaceBalloonService;
 
 public class MainActivity extends AppCompatActivity {
 
-    BluetoothSPP bluetoothSPP;
-    SpaceBalloonService service;
+    BluetoothSPP bt;
+    String receive;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        bluetoothSPP = new BluetoothSPP(MainActivity.this);
-        if (!bluetoothSPP.isBluetoothAvailable()) {
-            Toast.makeText(MainActivity.this, "Bluetooth is Not Available this time", Toast.LENGTH_SHORT).show();
-        } else {
-            bluetoothSPP.startService(BluetoothState.DEVICE_OTHER);
-            startActivityForResult(new Intent(getApplicationContext(), DeviceList.class), BluetoothState.REQUEST_CONNECT_DEVICE);
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        service = SpaceBalloonHelper.getServiceInstance();
-        setBluetooth();
+        bt = new BluetoothSPP(this);
+        if (!bt.isBluetoothAvailable()) {
+            Toast.makeText(getApplicationContext()
+                    , "블루투스를 켜주세요"
+                    , Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+            public void onDeviceConnected(String name, String address) {
+                Toast.makeText(getApplicationContext(), "연결되었습니다", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceDisconnected() {
+                Toast.makeText(getApplicationContext(), "연결이끊겼습니다", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceConnectionFailed() {
+            }
+        });
+
+        bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
+            public void onNewConnection(String name, String address) {
+            }
+
+            public void onAutoConnectionStarted() {
+            }
+        });
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            public void onDataReceived(byte[] data, String message) {
+                receive = message;
+                String[] s = receive.split(",");
+                for (String i : s) {
+                    Log.e("asdf", i);
+                }
+            }
+        });
+
     }
 
-    private void setBluetooth() {
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        bluetoothSPP.stopService();
+        bt.stopService();
+    }
+
+    public void onStart() {
+        super.onStart();
+        if (!bt.isBluetoothEnabled()) {
+            bt.enable();
+        } else {
+            if (!bt.isServiceAvailable()) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_OTHER);
+                setup();
+            }
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK)
-                bluetoothSPP.connect(data);
+                bt.connect(data);
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
-                bluetoothSPP.setupService();
-                bluetoothSPP.startService(BluetoothState.DEVICE_ANDROID);
-                setup();
+                bt.setupService();
             } else {
-                Toast.makeText(MainActivity.this, "No Device Selected", Toast.LENGTH_SHORT).show();
-                // Do something if user doesn't choose any device (Pressed back)
+                Toast.makeText(getApplicationContext(), "블루투스 켜주세요", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
-
     }
 
-    private void setup() {
-        bluetoothSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            @Override
-            public void onDataReceived(byte[] data, String message) {
-                Log.e("asdf", message);
-            }
-        });
+    public void setup() {
+        bt.autoConnect("HC-06");
     }
 }
